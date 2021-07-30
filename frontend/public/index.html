@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Web site created using create-react-app" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;1,100;1,300;1,400;1,700&display=swap"
+    rel="stylesheet" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/apple-touch-icon.png" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <title>ToDo HLS</title>
+  <style>
+    #online-notice {
+      position: fixed;
+      top: 0;
+      right: 0;
+      padding: 5px;
+      color: #155724;
+      background-color: #D4EDDA;
+      border: 1px solid #C3E6CB;
+      border-radius: 4px;
+      margin: 8px;
+    }
+    #offline-notice {
+      position: fixed;
+      top: 0;
+      right: 0;
+      padding: 5px;
+      color: #721C24;
+      background-color: #F8D7DA;
+      border: 1px solid #F5C6CB;
+      border-radius: 4px;
+      margin: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <span id="online-notice" hidden>Back to online! Refresh the page to get up-to-date data!</span>
+  <span id="offline-notice" hidden>You are offline!</span>
+  <div id="root"></div>
+  <script>
+    const onlineNotice = document.querySelector('#online-notice');
+    const offlineNotice = document.querySelector('#offline-notice');
+    window.onload = (e) => {
+      if(navigator.onLine){
+        onlineNotice.hidden = true;
+        offlineNotice.hidden = true;
+      }
+      else{
+        offlineNotice.hidden = false;
+      }
+    };
+
+    window.addEventListener('online', () => {
+      onlineNotice.hidden = false;
+      offlineNotice.hidden = true;
+    });
+    window.addEventListener('offline', () => {
+      onlineNotice.hidden = true;
+      offlineNotice.hidden = false;
+    });
+  </script>
+</body>
+
+</html>
