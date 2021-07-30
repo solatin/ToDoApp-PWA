@@ -105,7 +105,7 @@ class TodoItem extends Component {
           </div>
         )}
         {inQueue ? (
-          <div class='inqueue'>InQueue...</div>
+          <div className='inqueue'>InQueue...</div>
         ) : (
           <div className={`todo-item-options ${editMode ? 'edit' : 'view'}`}>
             {editMode && (

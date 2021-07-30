@@ -14,12 +14,14 @@ import {
   UPDATE_REQUEST,
   CLEAR_COMPLETED_FAILURE,
   CLEAR_COMPLETED_REQUEST,
-  CLEAR_COMPLETED_SUCCESS
+  CLEAR_COMPLETED_SUCCESS,
+  UPDATE_STATUS
 } from '../constants/todoConstants';
 
 const initialState = {
   items: [],
   filter: 'all',
+  isOnline: true,
   error: null,
   loading: false,
 };
@@ -108,6 +110,11 @@ const todosReducer = (state = initialState, { type, payload }) => {
         ...state,
         error: payload,
       };
+    case UPDATE_STATUS:
+      return {
+        ...state,
+        isOnline: payload
+      }
     default:
       return state;
   }

@@ -14,7 +14,8 @@ import {
   UPDATE_SUCCESS,
   CLEAR_COMPLETED_FAILURE,
   CLEAR_COMPLETED_REQUEST,
-  CLEAR_COMPLETED_SUCCESS
+  CLEAR_COMPLETED_SUCCESS,
+  UPDATE_STATUS
 } from '../constants/todoConstants';
 
 const ENDPOINT = 'http://192.168.1.107:3030/todos/';
@@ -114,3 +115,5 @@ export const clearCompletedRequest = () => async (dispatch) => {
     dispatch(clearCompletedFailure(e));
   }
 };
+
+export const updateOnline = (isOnline) => ({type: UPDATE_STATUS, payload: isOnline});

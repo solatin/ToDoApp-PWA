@@ -53,6 +53,13 @@ class TodosContainer extends Component {
     fetchRequest();
   }
 
+  componentDidUpdate(prevProps){
+    if(this.props.isOnline !== prevProps.isOnline){
+      const { fetchRequest } = this.props;
+      fetchRequest();
+    }
+  }
+
   render() {
     const { todos, filter, incompletedCount } = this.props;
 
@@ -85,7 +92,7 @@ TodosContainer.propTypes = {
 };
 
 const mapStateToProps = ({ todo }) => {
-  const { filter, items } = todo;
+  const { filter, items, isOnline } = todo;
   const todos = filterTodos(items, filter);
   const incompletedCount = getIncompletedTodoCount(todo.items);
 
@@ -93,6 +100,7 @@ const mapStateToProps = ({ todo }) => {
     todos,
     filter,
     incompletedCount,
+    isOnline
   };
 };
 
