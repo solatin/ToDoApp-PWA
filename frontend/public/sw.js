@@ -18,49 +18,25 @@ const root = 'http://localhost:3000/';
 let REQUEST_LIST = null;
 
 var SimpleWare = {
-  onInstall: function () {
+  onInstall: () => {
     console.log('Install event!');
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(PRECACHE_RESOURCE);
     });
   },
-  onActivate: function () {
+  onActivate: async () => {
     console.log('Ativate event!');
     self.clients.claim();
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
-          return null;
-        }),
-      );
-    });
+    const keys = await caches.keys();
+    return Promise.all(keys.map((key) => key !== CACHE_NAME? caches.delete(key) : null));
   },
 
-  onMessage: function (evt) {
+  onMessage:  (evt) => {
     console.log('On message called!!');
   },
 };
 
 worker.use(SimpleWare);
-
-function tryOrFallback(fakeResponse) {
-  return function (req, res) {
-    if (!navigator.onLine) {
-      console.log('No network availability, enqueuing');
-      return enqueue(req).then(function () {
-        return fakeResponse.clone();
-      });
-    }
-
-    console.log('Network available! Flushing queue.');
-    return flushQueue().then(function () {
-      return fetch(req);
-    });
-  };
-}
 
 worker.delete(
   ENDPOINT + 'todos/:id?*',
@@ -141,7 +117,6 @@ worker.put(
       });
     }
     
-
     console.log('Network available! Flushing queue.');
     return flushQueue().then(function () {
       return fetch(req);
@@ -153,7 +128,6 @@ worker.put(
   ENDPOINT + 'clear-completed?*', async (req, res) => {
     if (!navigator.onLine) {
       console.log('No network availability, enqueuing');
-      const clone_req = req.clone();
 
       const list_response = await caches.open(CACHE_NAME).then(cache => cache.match(REQUEST_LIST));
       const list = await list_response.json();
@@ -177,28 +151,30 @@ worker.put(
   }
 );
 
-worker.get('*', function (req, res) {
-  if(req.url === ENDPOINT_LIST && !REQUEST_LIST){
+worker.get('*', async (req, res) => {
+  if (req.url === ENDPOINT_LIST && !REQUEST_LIST) {
     REQUEST_LIST = req.clone();
   }
   //offline
   if (!navigator.onLine) {
-    return caches.open(CACHE_NAME).then((cache) =>
-      cache.match(req).then(
-        (match) => match ||
-          enqueue(req).then(
-            () => new Response(
-              JSON.stringify([
-                {
-                  text: 'You are offline! Enqueued your request',
-                },
-              ]),
-              { headers: { 'Content-Type': 'application/json' } },
-            ),
-          ),
-      ),
+    //return cache response
+    console.log('offline')
+    const cacheResponse = await caches.open(CACHE_NAME).then((cache) => cache.match(req));
+    if (cacheResponse) {
+      console.log('cacheResponse', cacheResponse);
+      return cacheResponse;
+    }
+    //no cache response, enqueued request
+    await enqueue(req);
+    return new Response(
+      JSON.stringify([
+        {
+          text: 'You are offline! Enqueued your request',
+        },
+      ]),
+      { headers: { 'Content-Type': 'application/json' } },
     );
-  };
+  }
   //online
   return flushQueue().then(function () {
     return fromNetwork(req, 1000).catch(() => fromCache(req));
@@ -268,11 +244,11 @@ function sendInOrder(requests) {
 }
 
 function serialize(request) {
-  var headers = {};
-  for (var entry of request.headers.entries()) {
+  let headers = {};
+  for (let entry of request.headers.entries()) {
     headers[entry[0]] = entry[1];
   }
-  var serialized = {
+  let serialized = {
     url: request.url,
     headers: headers,
     method: request.method,
