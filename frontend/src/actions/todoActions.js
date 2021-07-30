@@ -14,8 +14,12 @@ import {
   UPDATE_SUCCESS,
   CLEAR_COMPLETED_FAILURE,
   CLEAR_COMPLETED_REQUEST,
+<<<<<<< HEAD
   CLEAR_COMPLETED_SUCCESS,
   UPDATE_STATUS
+=======
+  CLEAR_COMPLETED_SUCCESS
+>>>>>>> da22b01b63ef44e00c703e1d1935c117c0387f66
 } from '../constants/todoConstants';
 
 const ENDPOINT = 'http://192.168.1.107:3030/todos/';
