@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notif me hard</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+</head>
+
+<body>
+  <button id="notifications">Pouring me notifs</button>
+  <script>
+    const button = document.getElementById('notifications');
+    button.addEventListener('click', () => {
+      Notification.requestPermission().then((result) => {
+        if (result === 'granted') {
+          randomNotification();
+        }
+      });
+    });
+    games = [{ name: 'sol game', author: 'sol', slug: 'eii' }, { name: 'sol game 2', author: 'sol', slug: 'eii 2' }];
+    function randomNotification() {
+      const randomItem = Math.floor(Math.random() * games.length);
+      const notifTitle = games[randomItem].name;
+      const notifBody = `Created by ${games[randomItem].author}.`;
+      const notifImg = `/frontend/public/apple-touch-icon.png`;
+      const options = {
+        body: notifBody,
+        icon: notifImg,
+      };
+      new Notification(notifTitle, options);
+      setTimeout(randomNotification, 30000);
+    }
+  </script>
+</body>
+
+</html>

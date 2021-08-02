@@ -29,5 +29,4 @@ module.exports = {
       .where('completed', 1)
       .del();
   }
-
 };

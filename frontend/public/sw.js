@@ -34,6 +34,33 @@ var SimpleWare = {
   onMessage:  (evt) => {
     console.log('On message called!!');
   },
+  onPush: (event) => {
+    const payload = event.data ? event.data.text() : 'no payload';
+    // Keep the service worker alive until the notification is created.
+    event.waitUntil(
+      // Show a notification with title 'ServiceWorker Cookbook' and use the payload
+      // as the body.
+      self.registration.showNotification('Sol Server', {
+        body: payload,
+      })
+    );
+  },
+  onNotificationclick: (event) => {
+    console.dir(event);
+    event.waitUntil(
+      clients
+        .matchAll()
+        .then(function (clientList) {
+          for (var i = 0; i < clientList.length; i++) {
+            var client = clientList[i];
+            if (client.url == 'http://localhost:3000/' && 'focus' in client) return client.focus();
+          }
+          if (clients.openWindow) {
+            return clients.openWindow('http://localhost:3000/');
+          }
+        }),
+    );
+  }
 };
 
 worker.use(SimpleWare);
