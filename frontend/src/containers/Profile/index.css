@@ -1,0 +1,39 @@
+.profile-container{
+  padding: 1rem 1rem;
+  background-color: #F5F5F5;
+}
+
+.user-email{
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.logout-btn{
+  color: #37352f;
+  padding: 6px 10px;
+  display: inline;
+  cursor: pointer;
+  margin-left: -8px;
+  line-height: 17px;
+}
+
+.logout-btn::before{
+  content: url('../../assets/images/logout.svg');
+  padding-top: 4px;
+  padding-right: 4px;
+}
+
+.logout-btn:hover{
+  background-color: #e8e7e4;
+}
+
+@media only screen and (min-width: 992px) {
+  .profile-container{
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+
+  }
+}

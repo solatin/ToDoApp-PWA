@@ -1,9 +1,8 @@
 .todo-footer-container {
   position: relative;
-  padding: 15px;
   display: flex;
+  padding: 8px;
   align-items: center;
-  justify-content: center;
   background: white;
   box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -13,8 +12,8 @@
   color: #777;
   font-weight: 300;
   text-decoration: none;
-  margin: 0 5px;
-  padding: 5px 10px;
+  margin: 0 2px;
+  padding: 5px 5px;
   border: 1px solid transparent;
   border-radius: 8px;
 }
@@ -26,14 +25,36 @@
 .todo-left-count {
   color: #777;
   font-weight: 300;
-  position: absolute;
-  left: 20px;
+  margin-right: 20px;
 }
 
 .todo-clear-complete {
   color: #777;
   font-weight: 300;
   text-decoration: none;
-  position: absolute;
-  right: 20px;
+  margin-left: 20px;
+}
+
+@media only screen and (min-width: 768px) {
+  .todo-footer-container {
+    position: relative;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .todo-menus a {
+    margin: 0 5px;
+    padding: 5px 10px;
+  }
+  .todo-left-count {
+    position: absolute;
+    left: 20px;
+  }
+  
+  .todo-clear-complete {
+    position: absolute;
+    right: 20px;
+  }
+
 }

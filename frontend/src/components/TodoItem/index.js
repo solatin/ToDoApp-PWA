@@ -39,10 +39,10 @@ class TodoItem extends Component {
     e.preventDefault();
 
     const {
-      onUpdateTodo,
+      onCompleteTodo,
       data: { completed },
     } = this.props;
-    onUpdateTodo({ completed: !completed });
+    onCompleteTodo({ completed: !completed });
   };
 
   handleDelete = (e) => {
@@ -145,6 +145,7 @@ TodoItem.propTypes = {
   }),
   onDeleteTodo: PropTypes.func,
   onUpdateTodo: PropTypes.func,
+  onCompleteTodo: PropTypes.func,
 };
 
 export default TodoItem;

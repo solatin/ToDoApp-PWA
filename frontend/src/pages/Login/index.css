@@ -1,0 +1,57 @@
+
+.title{
+  font-family: 'Roboto', sans-serif;
+  font-size: 24px;
+}
+
+.container-login{
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 4rem 5vw;
+  padding: 2rem;
+  flex-flow: column;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.container-login input {
+  width: 100%;
+  color: #4d4d4d;
+  font-size: 14px !important;
+  font-weight: 400;
+  font-family: 'Roboto', sans-serif;
+  outline: none;
+  border: 1px solid #6E6E6E;
+  border-radius: 4px;
+  padding: 4px;
+  margin-bottom: 1rem;
+}
+
+
+.container-login .checkbox{
+  width: fit-content !important;
+  display: inline !important;
+  margin-right: 0.5rem;
+}
+
+.container-login button{
+  width: 100%;
+  background-color: #90CAF9;
+  border-radius: 4px;
+  border: 1px solid black;
+  font-weight: 600;
+  height: 33px;
+  cursor: pointer;
+}
+
+.container-login button:hover{
+  background-color: #648dae;
+}
+
+@media only screen and (min-width: 992px) {
+  .container-login{
+    margin: 4rem 35vw;
+  }
+}
