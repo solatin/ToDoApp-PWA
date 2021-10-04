@@ -1,14 +1,15 @@
-// import './indexDb';
-// import Notification from './notification';
+import Notification from './Notification';
 
 if ('serviceWorker' in navigator && 'PushManager' in window) {
-  navigator.serviceWorker.register('/sw.js').then((registration) => {
-    // const notification = Notification.init(registration);
-    // notification.subscribe();
-    console.log('ServiceWorker registration successful with scope: ', registration);
-  }, (err) => {
-    console.log('ServiceWorker registration failed: ', err);
-  });
+  navigator.serviceWorker
+    .register('/sw.js')
+    .then((registration) => {
+      Notification.init(registration);
+      console.log('ServiceWorker registration successful with scope: ', registration);
+    })
+    .catch((err) => {
+      console.log('ServiceWorker registration failed: ', err);
+    });
 } else {
   console.warn('Push messaging is not supported');
 }

@@ -12,7 +12,8 @@ import {
   fetchRequest,
   createRequest,
   deleteRequest,
-  updateRequest
+  updateRequest,
+  completeRequest
 } from '../../actions/todoActions';
 import { filterTodos, getIncompletedTodoCount } from '../../utils/todoUtils';
 
@@ -28,6 +29,12 @@ class TodosContainer extends Component {
   handleUpdateTodo = async (id, attributes) => {
     const { updateRequest, fetchRequest} = this.props;
     await updateRequest({id, ...attributes});
+    fetchRequest();
+  };
+
+  handleCompleteTodo = async (id, attributes) => {
+    const { completeRequest, fetchRequest} = this.props;
+    await completeRequest({id, ...attributes});
     fetchRequest();
   };
 
@@ -67,7 +74,11 @@ class TodosContainer extends Component {
       <div className='app-container'>
         <div className='todo-container'>
           <TodoForm onCreateTodo={this.handleCreateTodo} />
-          <TodoList todos={todos} onDeleteTodo={this.handleDeleteTodo} onUpdateTodo={this.handleUpdateTodo} />
+          <TodoList 
+          todos={todos}
+           onDeleteTodo={this.handleDeleteTodo} 
+           onUpdateTodo={this.handleUpdateTodo} 
+           onCompleteTodo={this.handleCompleteTodo}/>
           <TodoFooter
             activeFilter={filter}
             incompletedCount={incompletedCount}
@@ -86,6 +97,7 @@ TodosContainer.propTypes = {
   fetchRequest: PropTypes.func,
   createRequest: PropTypes.func,
   updateRequest: PropTypes.func,
+  completeRequest: PropTypes.func,
   deleteRequest: PropTypes.func,
   changeTodoFilter: PropTypes.func,
   clearCompletedRequest: PropTypes.func,
@@ -109,8 +121,9 @@ const mapDispatchToProps = {
   clearCompletedRequest,
   fetchRequest,
   createRequest,
+  completeRequest,
   deleteRequest,
-  updateRequest
+  updateRequest,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodosContainer);

@@ -7,7 +7,7 @@ import './index.css';
 
 class TodoList extends Component {
   render() {
-    const { todos, onDeleteTodo, onUpdateTodo } = this.props;
+    const { todos, onDeleteTodo, onUpdateTodo, onCompleteTodo} = this.props;
 
     return (
       <div className='todo-list-container'>
@@ -17,6 +17,7 @@ class TodoList extends Component {
             data={todo}
             onDeleteTodo={() => onDeleteTodo(todo.id)}
             onUpdateTodo={(attributes) => onUpdateTodo(todo.id, attributes)}
+            onCompleteTodo={(attributes) => onCompleteTodo(todo.id, attributes)}
           />
         ))}
         {todos.length === 0 && (
@@ -41,6 +42,7 @@ TodoList.propTypes = {
   ),
   onDeleteTodo: PropTypes.func,
   onUpdateTodo: PropTypes.func,
+  onCompleteTodo: PropTypes.func,
 };
 
 export default TodoList;

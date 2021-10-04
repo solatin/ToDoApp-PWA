@@ -18,6 +18,12 @@ body {
 }
 
 .todo-container {
-  width: 550px;
-  margin: 40px auto;
+  width: 320px;
+}
+
+@media only screen and (min-width: 768px) {
+  .todo-container {
+    margin: 3rem auto;
+    width: 500px;
+  }
 }

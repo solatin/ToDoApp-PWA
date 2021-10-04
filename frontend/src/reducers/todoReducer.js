@@ -12,10 +12,13 @@ import {
   UPDATE_FAILURE,
   UPDATE_SUCCESS,
   UPDATE_REQUEST,
+  COMPLETE_FAILURE,
+  COMPLETE_SUCCESS,
+  COMPLETE_REQUEST,
   CLEAR_COMPLETED_FAILURE,
   CLEAR_COMPLETED_REQUEST,
   CLEAR_COMPLETED_SUCCESS,
-  UPDATE_STATUS
+  UPDATE_STATUS,
 } from '../constants/todoConstants';
 
 const initialState = {
@@ -95,6 +98,21 @@ const todosReducer = (state = initialState, { type, payload }) => {
         ...state,
         error: payload,
       };
+    case COMPLETE_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case COMPLETE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      };
+    case COMPLETE_FAILURE:
+      return {
+        ...state,
+        error: payload,
+      };
     case CLEAR_COMPLETED_REQUEST:
       return {
         ...state,
@@ -113,8 +131,8 @@ const todosReducer = (state = initialState, { type, payload }) => {
     case UPDATE_STATUS:
       return {
         ...state,
-        isOnline: payload
-      }
+        isOnline: payload,
+      };
     default:
       return state;
   }

@@ -345,7 +345,8 @@
   
     // push notifications
     addEventListener('push', this);
-  
+    //notification click
+    addEventListener('notificationclick', this);
     // XXX: Add default configuration
   };
   
@@ -353,7 +354,6 @@
    * Handle and forward all events related to SW
    */
   ServiceWorkerWare.prototype.handleEvent = function sww_handleEvent(evt) {
-  
     debug('Event received: ' + evt.type);
     switch(evt.type) {
       case 'install':
@@ -369,6 +369,7 @@
       case 'message':
       case 'beforeevicted':
       case 'evicted':
+      case 'notificationclick':
         this.forwardEvent(evt);
         break;
       default:

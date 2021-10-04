@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {updateOnline} from '../../actions/todoActions';
 import './index.css';
 
-class Network extends Component{
+class NetworkContainer extends Component{
   constructor(props){
     super(props);
     window.addEventListener('online', this.updateStatus);
@@ -45,7 +45,7 @@ class Network extends Component{
   }
 }
 
-Network.propTypes = {
+NetworkContainer.propTypes = {
   isOnline: PropTypes.bool,
   updateOnline: PropTypes.func
 }
@@ -56,4 +56,4 @@ const mapDispatchToProps = {
   updateOnline
 }
 
-export default connect(mapsStateToProps, mapDispatchToProps)(Network);
+export default connect(mapsStateToProps, mapDispatchToProps)(NetworkContainer);

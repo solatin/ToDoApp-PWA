@@ -11,9 +11,9 @@ importScripts('./lib/ServiceWorkerWare.js');
 importScripts('./lib/localforage.js');
 
 var worker = new ServiceWorkerWare();
-const ENDPOINT_LIST = 'http://192.168.1.107:3030/todos/';
+const ENDPOINT_LIST = 'http://192.168.1.107:3030/todos';
 const ENDPOINT = 'http://192.168.1.107:3030/';
-const root = 'http://localhost:3000/';
+const root = 'http://192.168.1.107:3333/';
 
 let REQUEST_LIST = null;
 
@@ -34,6 +34,30 @@ var SimpleWare = {
   onMessage:  (evt) => {
     console.log('On message called!!');
   },
+  onPush: (event) => {
+    const payload = event.data ? event.data.text() : 'no payload';
+    event.waitUntil(
+      self.registration.showNotification('Sol Server', {
+        body: payload,
+      })
+    );
+  },
+  onNotificationclick: (event) => {
+    console.dir(event);
+    event.waitUntil(
+      clients
+        .matchAll()
+        .then(function (clientList) {
+          for (var i = 0; i < clientList.length; i++) {
+            var client = clientList[i];
+            if (client.url == root && 'focus' in client) return client.focus();
+          }
+          if (clients.openWindow) {
+            return clients.openWindow(root);
+          }
+        }),
+    );
+  }
 };
 
 worker.use(SimpleWare);
@@ -97,7 +121,33 @@ worker.post(
 );
 
 worker.put(
-  ENDPOINT + 'todos/', async (req, res) => {
+  ENDPOINT + 'todos/clear-completed?*', async (req, res) => {
+    if (!navigator.onLine) {
+      console.log('No network availability, enqueuing');
+
+      const list_response = await caches.open(CACHE_NAME).then(cache => cache.match(REQUEST_LIST));
+      const list = await list_response.json();
+      const new_list = list.filter(todo => !todo.completed);
+      const blob = new Blob([JSON.stringify(new_list, null, 2)], {type : 'application/json'});
+      const init = {status: 202};
+      const new_res = new Response(blob, init);
+      await caches.open(CACHE_NAME).then((cache) => cache.put(REQUEST_LIST, new_res));
+
+      return enqueue(req).then(function () {
+        return new Response(null, {status: 202,}).clone();
+      });
+    }
+    
+
+    console.log('Network available! Flushing queue.');
+    return flushQueue().then(function () {
+      return fetch(req);
+    });
+  }
+);
+
+worker.put(
+  ENDPOINT + 'todos?*', async (req, res) => {
     if (!navigator.onLine) {
       console.log('No network availability, enqueuing');
       const clone_req = req.clone();
@@ -124,44 +174,18 @@ worker.put(
   }
 );
 
-worker.put(
-  ENDPOINT + 'clear-completed?*', async (req, res) => {
-    if (!navigator.onLine) {
-      console.log('No network availability, enqueuing');
 
-      const list_response = await caches.open(CACHE_NAME).then(cache => cache.match(REQUEST_LIST));
-      const list = await list_response.json();
-      const new_list = list.filter(todo => !todo.completed);
-      
-      const blob = new Blob([JSON.stringify(new_list, null, 2)], {type : 'application/json'});
-      const init = {status: 202};
-      const new_res = new Response(blob, init);
-      await caches.open(CACHE_NAME).then((cache) => cache.put(REQUEST_LIST, new_res));
-
-      return enqueue(req).then(function () {
-        return new Response(null, {status: 202,}).clone();
-      });
-    }
-    
-
-    console.log('Network available! Flushing queue.');
-    return flushQueue().then(function () {
-      return fetch(req);
-    });
-  }
-);
 
 worker.get('*', async (req, res) => {
   if (req.url === ENDPOINT_LIST && !REQUEST_LIST) {
+    console.log('zo', req);
     REQUEST_LIST = req.clone();
   }
   //offline
   if (!navigator.onLine) {
     //return cache response
-    console.log('offline')
     const cacheResponse = await caches.open(CACHE_NAME).then((cache) => cache.match(req));
     if (cacheResponse) {
-      console.log('cacheResponse', cacheResponse);
       return cacheResponse;
     }
     //no cache response, enqueued request
