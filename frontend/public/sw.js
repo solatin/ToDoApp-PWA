@@ -13,7 +13,7 @@ importScripts('./lib/localforage.js');
 var worker = new ServiceWorkerWare();
 const ENDPOINT_LIST = 'http://192.168.1.107:3030/todos';
 const ENDPOINT = 'http://192.168.1.107:3030/';
-const root = 'http://192.168.1.107:3000/';
+const root = 'http://192.168.1.107:3333/';
 
 let REQUEST_LIST = null;
 
